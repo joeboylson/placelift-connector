@@ -24,7 +24,5 @@ app.use((_, response: Response) => {
   return response.redirect("http://localhost:3000");
 });
 
-console.log(process.env);
-
 // start
 app.listen(PORT, () => console.log(`>>> ${PORT}`));
