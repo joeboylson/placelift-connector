@@ -19,8 +19,13 @@ app.use('/api', apiRouter);
 app.use(express.static(path.join(__dirname, './public')));
 app.use((_, response: Response) => {
     const isProduction = process.env.PORT === "80";
-    const responseText = `Mode: ${isProduction ? "Production" : "Development"}`
-    response.status(200).send(responseText);
+
+    if (isProduction) {
+        const frontEndPath = path.join(__dirname, "./public/index.html");
+        response.sendFile(frontEndPath);
+    }
+
+    response.redirect("http://localhost:3000")
 });
 
 
