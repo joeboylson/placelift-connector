@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { Response } from 'express'
 import path from 'path';
 import apiRouter from "./router/apiRouter";
 
@@ -22,10 +22,10 @@ app.use((_, response: Response) => {
 
     if (isProduction) {
         const frontEndPath = path.join(__dirname, "./public/index.html");
-        response.sendFile(frontEndPath);
+        return response.sendFile(frontEndPath);
     }
 
-    response.redirect("http://localhost:3000")
+    return response.redirect("http://localhost:3000")
 });
 
 
