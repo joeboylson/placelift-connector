@@ -1,10 +1,9 @@
-const { REACT_APP_AUTH_URL_BASE } = process.env;
+const AUTH_URL_BASE =
+  "https://ovoyksiyukivurwhxzbk.supabase.co/auth/v1/authorize?provider=google";
 
 export default function Login() {
   const redirectTo = window.location.origin;
   return (
-    <a href={`${REACT_APP_AUTH_URL_BASE}&redirect_to=${redirectTo}/post-login`}>
-      Login
-    </a>
+    <a href={`${AUTH_URL_BASE}&redirect_to=${redirectTo}/post-login`}>Login</a>
   );
 }
