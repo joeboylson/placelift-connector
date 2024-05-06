@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import supabase from "../../utils/supabase";
 import { getIsAuthUserAProjectManager } from "../../utils/project-manager";
+import { getAllHubSpotUsers } from "../../utils/sync/users-and-contacts";
 
 const apiRouter = express.Router();
 
@@ -37,5 +38,7 @@ apiRouter.get("/is-authenticated", async (_, response: Response) => {
     response.status(500).send({ authenticated: false, user: null });
   }
 });
+
+apiRouter.get("/test", getAllHubSpotUsers);
 
 export default apiRouter;
