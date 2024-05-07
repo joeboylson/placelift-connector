@@ -24,6 +24,7 @@
     "@hubspot/api-client": "^11.1.0",
     "@supabase/supabase-js": "^2.43.1",
     "express": "^4.19.2",
-    "firebase": "^10.11.1"
+    "firebase": "^10.11.1",
+    "lodash": "^4.17.21"
   }
 }
