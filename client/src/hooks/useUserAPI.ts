@@ -62,9 +62,9 @@ export function useUsersApi() {
         i.name,
         i.email,
         i.phone_number,
-      ]);
+      ]).toLowerCase();
 
-      return userSearchValue.includes(usersApiFilter);
+      return userSearchValue.toLowerCase().includes(usersApiFilter);
     });
   }, [users, usersApiFilter]);
 

@@ -1,30 +1,46 @@
 import "./index.css";
 import { useParams } from "react-router-dom";
 import { useUserActionsApi } from "../../hooks/useUserActionsAPI";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Box, Button, Chip, Stack, Typography } from "@mui/material";
 import BasicUserInfo from "../BasicUserInfo";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CellSpacer from "../CellSpacer";
 
 function MessagesFeed() {
+  // hooks
   const { userId } = useParams();
   const { userActions: allUserActions, sendBlankBotMessage } =
     useUserActionsApi();
 
+  // values
   const userActions = useMemo(() => {
+    if (!userId) return [];
     return allUserActions.filter((i) => i.user_id === Number(userId));
   }, [allUserActions, userId]);
 
-  const user = useMemo(() => userActions[0]?.user, [userActions]);
+  const user = useMemo(() => {
+    if (!userId) return undefined;
+    return userActions[0]?.user;
+  }, [userActions]);
 
   const userNeedsResponse = useMemo(() => {
+    if (!user) return false;
+
     try {
-      return userActions[0]?.sender_id === user.id;
+      return userActions[0]?.sender_id === user?.id;
     } catch (e) {
       return false;
     }
-  }, [userActions, user.id]);
+  }, [userActions, user]);
+
+  // functions
+  const handleSendBotMessage = useCallback(() => {
+    if (!user) return;
+    sendBlankBotMessage(user.id);
+  }, []);
+
+  if (!userId) return <span />;
 
   return (
     <div id="components-messagesfeed">
@@ -34,10 +50,7 @@ function MessagesFeed() {
 
         <div>
           {userNeedsResponse && (
-            <Button
-              variant="contained"
-              onClick={() => sendBlankBotMessage(user.id)}
-            >
+            <Button variant="contained" onClick={handleSendBotMessage}>
               Ignore Needs Response
             </Button>
           )}

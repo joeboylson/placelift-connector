@@ -1,5 +1,9 @@
-#components-userstable .MuiTableContainer-root {
-  height: calc(100vh - 64px - 16px - 16px);
+#components-userstable {
+  height: calc(100vh - 64px - 16px - 16px - 16px);
+  overflow-y: scroll;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 50px 1fr;
 }
 
 #components-userstable .MuiTableCell-root {

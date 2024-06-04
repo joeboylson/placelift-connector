@@ -8,6 +8,7 @@ import {
   ListItemButton,
   ListItemText,
   Stack,
+  TextField,
 } from "@mui/material";
 import { useUserActionsApi } from "../../hooks/useUserActionsAPI";
 import { useCallback, useMemo } from "react";
@@ -18,7 +19,7 @@ import { useNavigate, useParams } from "react-router-dom";
 function UsersList() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { userActions } = useUserActionsApi();
+  const { userActions, setUsersApiFilter } = useUserActionsApi();
 
   const users: Tables<"users">[] = useMemo(() => {
     return userActions.reduce((_users, _userAction) => {
@@ -44,6 +45,11 @@ function UsersList() {
 
   return (
     <div id="components-userslist">
+      <TextField
+        label="Search"
+        variant="standard"
+        onChange={(i) => setUsersApiFilter(i.target.value)}
+      />
       <List dense>
         {users.map((i) => {
           const avatarProps: AvatarOwnProps = i.image_path

@@ -2,4 +2,18 @@
   height: calc(100vh - 64px - 16px - 32px);
   overflow-y: scroll;
   border-right: 1px solid #ddd;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 64px 1fr;
+  justify-items: center;
+}
+
+#components-userslist .MuiFormControl-root {
+  width: calc(100% - 16px);
+  margin-top: 6px;
+}
+
+#components-userslist .MuiList-root,
+#components-userslist .MuiButtonBase-root {
+  width: 100%;
 }

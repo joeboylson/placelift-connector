@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Tables } from "../types/supabase";
 import { AllUserActions } from "../types";
+import { debounce } from "lodash";
 
 const API_URL_BASE = "/api/user-actions";
 const API_GET_URL = `${API_URL_BASE}/get`;
@@ -10,6 +11,7 @@ const API_BLANK_BOT_MESSAGE_URL = `${API_URL_BASE}/blank-bot-message`;
 
 export function useUserActionsApi() {
   const [userActions, setUserActions] = useState<AllUserActions>([]);
+  const [userActionsApiFilter, setUserActionsApiFilter] = useState<string>();
 
   const getAllUserActions = useCallback(async () => {
     try {
@@ -67,15 +69,36 @@ export function useUserActionsApi() {
     [getAllUserActions]
   );
 
+  const filteredUsersActions = useMemo(() => {
+    if (!userActionsApiFilter) return userActions;
+    return userActions.filter((i) => {
+      const userSearchValue = JSON.stringify([
+        i.id,
+        i.text,
+        i.user.id,
+        i.user.name,
+        i.user.email,
+        i.user.phone_number,
+        i.sender.id,
+        i.sender.name,
+        i.sender.email,
+        i.sender.phone_number,
+      ]).toLowerCase();
+
+      return userSearchValue.toLowerCase().includes(userActionsApiFilter);
+    });
+  }, [userActions, userActionsApiFilter]);
+
   useEffect(() => {
     if (!userActions.length) getAllUserActions();
   }, [getAllUserActions, userActions]);
 
   return {
-    userActions,
+    userActions: filteredUsersActions,
     getAllUserActions,
     updateUserActionsState,
     updateUserAction,
     sendBlankBotMessage,
+    setUsersApiFilter: debounce(setUserActionsApiFilter, 200),
   };
 }
