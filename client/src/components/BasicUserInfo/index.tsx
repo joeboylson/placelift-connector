@@ -1,3 +1,4 @@
+import "./index.css";
 import { Chip, Stack, Typography } from "@mui/material";
 import { Tables } from "../../types/supabase";
 import NumbersIcon from "@mui/icons-material/Numbers";
@@ -10,10 +11,8 @@ interface BasicUserInfoProps {
 
 export default function BasicUserInfo({ user }: BasicUserInfoProps) {
   return (
-    <div>
-      <Typography variant="body2" gutterBottom>
-        {user.name || "[guest]"}
-      </Typography>
+    <div className="components-basicuserinfo">
+      <Typography variant="body2">{user.name || "[guest]"}</Typography>
 
       <Stack direction="row" useFlexGap flexWrap="wrap" gap={"8px"}>
         <Chip size="small" label={user.id} icon={<NumbersIcon />} />

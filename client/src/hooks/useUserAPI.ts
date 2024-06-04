@@ -58,15 +58,19 @@ export function useUsersApi() {
     if (!usersApiFilter) return users;
     return users.filter((i) => {
       const userSearchValue = JSON.stringify([
+        i.id,
         i.name,
         i.email,
-        i.id,
         i.phone_number,
       ]);
 
       return userSearchValue.includes(usersApiFilter);
     });
   }, [users, usersApiFilter]);
+
+  const archiveUser = useCallback((userId: number) => {
+    updateUser(userId, { is_archived: true });
+  }, []);
 
   useEffect(() => {
     if (!users.length) getAllUsers();
@@ -78,5 +82,6 @@ export function useUsersApi() {
     updateUsersState,
     updateUser,
     setUsersApiFilter: debounce(setUsersApiFilter, 200),
+    archiveUser,
   };
 }
