@@ -1,0 +1,4 @@
+#components-userrequeststable .MuiTableContainer-root {
+  height: calc(100vh - 64px - 16px - 16);
+}
+

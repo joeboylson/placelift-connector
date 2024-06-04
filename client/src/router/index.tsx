@@ -1,30 +1,61 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Login from "../pages/Login";
-import PostLogin from "../pages/PostLogin";
-import Home from "../pages/Home";
 import AuthenticatedWrapper from "../components/AuthenticatedWrapper";
+import UserRequestsTable from "../pages/UserRequestsTable";
+import UsersTable from "../pages/UsersTable";
+import Messaging from "../pages/Messaging";
 
 const router = createBrowserRouter([
-    {
-        path: "/login",
-        element: <Login />,
-    },
-
-    {
-        path: "/post-login",
-        element: <PostLogin />,
-    },
-
-    {
-        path: "/",
-        element: (
-            <AuthenticatedWrapper>
-                <Home />
-            </AuthenticatedWrapper>
-        )
-    },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/",
+    element: <Navigate to="/dashboard/user-requests" />,
+  },
+  {
+    path: "/dashboard",
+    element: <Navigate to="/dashboard/user-requests" />,
+  },
+  {
+    path: "/dashboard/user-requests",
+    element: (
+      <AuthenticatedWrapper>
+        <UserRequestsTable />
+      </AuthenticatedWrapper>
+    ),
+  },
+  {
+    path: "/dashboard/users",
+    element: (
+      <AuthenticatedWrapper>
+        <UsersTable />
+      </AuthenticatedWrapper>
+    ),
+  },
+  {
+    path: "/dashboard/messaging",
+    element: (
+      <AuthenticatedWrapper>
+        <Messaging />
+      </AuthenticatedWrapper>
+    ),
+  },
+  {
+    path: "/dashboard/messaging/:userId",
+    element: (
+      <AuthenticatedWrapper>
+        <Messaging />
+      </AuthenticatedWrapper>
+    ),
+  },
 ]);
 
 export function Router() {
-    return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }

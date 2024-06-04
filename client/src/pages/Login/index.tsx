@@ -1,9 +1,86 @@
-const AUTH_URL_BASE =
-  "https://ovoyksiyukivurwhxzbk.supabase.co/auth/v1/authorize?provider=google";
+import "./index.css";
+import { useCallback, useState } from "react";
+import { useOTPLogin } from "../../hooks/useOTPLogin";
+import { useNavigate } from "react-router-dom";
+import { Button, Card, CardContent, TextField } from "@mui/material";
 
 export default function Login() {
-  const redirectTo = window.location.origin;
+  const navigate = useNavigate();
+  const { sendOTPToEmailAddress, verifyOTP } = useOTPLogin();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>();
+  const [otp, setOTP] = useState<string>();
+  const [otpEmailSent, setOTPEmailSent] = useState<boolean>(false);
+
+  const handleSendOTP = useCallback(async () => {
+    try {
+      setLoading(true);
+      if (!email) return;
+      const success = await sendOTPToEmailAddress(email);
+      if (success) setOTPEmailSent(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [email, sendOTPToEmailAddress]);
+
+  const handleVerifyOTP = useCallback(async () => {
+    try {
+      setLoading(true);
+      if (!email) return;
+      if (!otp) return;
+      const success = await verifyOTP(email, otp);
+      if (success) {
+        navigate("/");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [email, otp, verifyOTP, navigate]);
+
   return (
-    <a href={`${AUTH_URL_BASE}&redirect_to=${redirectTo}/post-login`}>Login</a>
+    <div id="pages-login">
+      <Card>
+        <CardContent>
+          <TextField
+            id="outlined-basic"
+            label="Email"
+            variant="outlined"
+            onChange={(i) => setEmail(i.target.value)}
+            disabled={otpEmailSent}
+          />
+
+          {otpEmailSent && (
+            <>
+              <TextField
+                id="outlined-basic"
+                label="OTP"
+                variant="outlined"
+                type="text"
+                onChange={(i) => setOTP(i.target.value)}
+              />
+              <Button
+                variant="contained"
+                onClick={handleVerifyOTP}
+                disabled={loading}
+              >
+                Verify OTP
+              </Button>
+            </>
+          )}
+          {!otpEmailSent && (
+            <>
+              <Button
+                variant="contained"
+                onClick={handleSendOTP}
+                disabled={loading}
+              >
+                Send OTP
+              </Button>
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

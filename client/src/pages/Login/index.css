@@ -1,0 +1,18 @@
+#pages-login {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+#pages-login-wrapper .MuiPaper-root {
+  width: 100%;
+  max-width: 400px;
+}
+
+#pages-login-wrapper .MuiCardContent-root {
+  
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}

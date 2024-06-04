@@ -1,6 +1,9 @@
 import supabase from "./supabase";
 
 export async function getIsAuthUserAProjectManager() {
+  const isProduction = process.env.MODE === "production";
+  if (!isProduction) return true;
+
   try {
     const {
       data: {
@@ -17,6 +20,8 @@ export async function getIsAuthUserAProjectManager() {
       .single();
 
     if (error) throw new Error(error.message);
+
+    console.log(user);
 
     const projectMangerProfile = user["project_manager_profile"][0];
     return projectMangerProfile["user_id"] === user["id"];

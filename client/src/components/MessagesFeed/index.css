@@ -1,0 +1,40 @@
+#components-messagesfeed {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 200px 1fr;
+  align-content: baseline;
+  height: calc(100vh - 64px - 16px - 32px);
+}
+
+#components-messagesfeed > .MuiBox-root {
+  padding: 8px 16px;
+  display: grid;
+  align-items: center;
+  align-content: baseline;
+
+}
+
+#components-messagesfeed-messageswrapper {
+  overflow-y: scroll;
+  padding: 32px 32px 160px 32px;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: baseline;
+  gap: 32px;
+  border-bottom: 1px solid transparent;
+}
+
+.components-messagesfeed-message {
+  margin: 0 0 0 20vw;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+.components-messagesfeed-message.sender-is-user {
+  margin: 0 20vw 0 0;
+  background-color: #29ABE2;
+  border: 1px solid #29ABE2;
+  color: white;
+}

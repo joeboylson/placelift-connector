@@ -625,6 +625,7 @@ export type Database = {
           id: number;
           images: string[] | null;
           is_archived: boolean | null;
+          is_spam: boolean | null;
           price: number;
           room_type_id: number;
           status_type_id: number;
@@ -639,6 +640,7 @@ export type Database = {
           id?: number;
           images?: string[] | null;
           is_archived?: boolean | null;
+          is_spam?: boolean | null;
           price?: number;
           room_type_id: number;
           status_type_id?: number;
@@ -653,6 +655,7 @@ export type Database = {
           id?: number;
           images?: string[] | null;
           is_archived?: boolean | null;
+          is_spam?: boolean | null;
           price?: number;
           room_type_id?: number;
           status_type_id?: number;
@@ -724,6 +727,7 @@ export type Database = {
       };
       users: {
         Row: {
+          auth_id: string | null;
           created_at: string;
           email: string | null;
           firebase_id: string | null;
@@ -738,6 +742,7 @@ export type Database = {
           project_manager_id: number | null;
         };
         Insert: {
+          auth_id?: string | null;
           created_at?: string;
           email?: string | null;
           firebase_id?: string | null;
@@ -752,6 +757,7 @@ export type Database = {
           project_manager_id?: number | null;
         };
         Update: {
+          auth_id?: string | null;
           created_at?: string;
           email?: string | null;
           firebase_id?: string | null;

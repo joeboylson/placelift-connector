@@ -1,44 +1,40 @@
-import axios from "axios";
-import { WithChildren } from "../../types"
-import { createContext, useEffect, useState } from "react";
+import "./index.css";
+import { WithChildren } from "../../types";
+import { createContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { MenuItem, MenuList } from "@mui/material";
+import { useAuthenticatedUser } from "../../hooks/useAuthenticatedUser";
+import Header from "../Header";
 
-type AuthenticatedWrapperProps = WithChildren & {};
+interface UserContextType {
+  user: any;
+}
 
-interface UserContextType { user: any }
 export const UserContext = createContext<UserContextType>({ user: null });
 
-export default function AuthenticatedWrapper({ children }: AuthenticatedWrapperProps) {
+export default function AuthenticatedWrapper({ children }: WithChildren) {
+  const { user } = useAuthenticatedUser();
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const goToUserRequests = () => navigate("/dashboard/user-requests");
+  const goToUsers = () => navigate("/dashboard/users");
+  const goToMessaging = () => navigate("/dashboard/messaging");
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [user, setUser] = useState<any>();
-
-    useEffect(() => {
-        setLoading(true)
-        axios.get(`/api/is-authenticated`)
-            .then(function (response) {
-                setUser(response.data.user);
-            })
-            .catch(function (error) {
-                navigate("/login")
-            })
-            .finally(() => {
-                setLoading(false)
-            })
-    }, [])
-
-    if (loading) {
-        return <p>loading</p>
-    }
-
-    return (
-        <div>
-            <UserContext.Provider value={{ user }}>
-                <p>AUTHENTICATED</p>
-                {children}
-            </UserContext.Provider>
+  return (
+    <UserContext.Provider value={{ user }}>
+      <div id="components-authenticatedwrapper">
+        <div id="components-authenticatedwrapper-header">
+          <Header />
         </div>
-    )
-} 
+
+        <MenuList dense>
+          <MenuItem onClick={goToUserRequests}>Requests</MenuItem>
+          <MenuItem onClick={goToUsers}>Users</MenuItem>
+          <MenuItem onClick={goToMessaging}>Messaging</MenuItem>
+        </MenuList>
+
+        <div id="components-authenticatedwrapper-page-wrapper">{children}</div>
+      </div>
+    </UserContext.Provider>
+  );
+}

@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import supabase from "../../utils/supabase";
 import { getIsAuthUserAProjectManager } from "../../utils/project-manager";
 import { syncUsersAndContacts } from "../../utils/sync/users-and-contacts";
+import { DEV_USER } from "../../constants/dev";
 
 const apiRouter = express.Router();
 
@@ -25,12 +26,19 @@ apiRouter.get("/post-login", async (request: Request, response: Response) => {
 
 apiRouter.get("/is-authenticated", async (_, response: Response) => {
   try {
+    const isProduction = process.env.MODE === "production";
+    if (!isProduction) {
+      return response.status(200).send({ authenticated: true, user: DEV_USER });
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) throw new Error("Invalid session");
-    if (!getIsAuthUserAProjectManager()) throw new Error("Invalid user");
+
+    const userIsProjectManager = await getIsAuthUserAProjectManager();
+    if (!userIsProjectManager) throw new Error("Invalid user");
 
     return response.status(200).send({ authenticated: true, user });
   } catch (error) {

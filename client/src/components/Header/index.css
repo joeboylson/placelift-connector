@@ -1,0 +1,16 @@
+#components-header {
+  height: 64px;
+  background-color: #29ABE2;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  color: white;
+  border-radius: 8px;
+}
+
+#components-header-logo-wrapper {
+  height: calc(64px - 4px);
+  width: calc(64px - 4px);
+  padding: 4px;
+  margin-left: 8px;
+}
