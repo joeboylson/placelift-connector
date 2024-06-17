@@ -1,7 +1,8 @@
 #components-messagesfeed {
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 200px 1fr;
+  grid-template-rows: 114px 1fr;
   align-content: baseline;
   height: calc(100vh - 64px - 16px - 32px);
 }

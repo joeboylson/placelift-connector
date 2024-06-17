@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { useOTPLogin } from "../../hooks/useOTPLogin";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, CardContent, TextField } from "@mui/material";
+import SpacedGrid8px from "../../components/SpacedList8px";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -42,43 +43,45 @@ export default function Login() {
     <div id="pages-login">
       <Card>
         <CardContent>
-          <TextField
-            id="outlined-basic"
-            label="Email"
-            variant="outlined"
-            onChange={(i) => setEmail(i.target.value)}
-            disabled={otpEmailSent}
-          />
+          <SpacedGrid8px>
+            <TextField
+              id="outlined-basic"
+              label="Email"
+              variant="outlined"
+              onChange={(i) => setEmail(i.target.value)}
+              disabled={otpEmailSent}
+            />
 
-          {otpEmailSent && (
-            <>
-              <TextField
-                id="outlined-basic"
-                label="OTP"
-                variant="outlined"
-                type="text"
-                onChange={(i) => setOTP(i.target.value)}
-              />
-              <Button
-                variant="contained"
-                onClick={handleVerifyOTP}
-                disabled={loading}
-              >
-                Verify OTP
-              </Button>
-            </>
-          )}
-          {!otpEmailSent && (
-            <>
-              <Button
-                variant="contained"
-                onClick={handleSendOTP}
-                disabled={loading}
-              >
-                Send OTP
-              </Button>
-            </>
-          )}
+            {otpEmailSent && (
+              <>
+                <TextField
+                  id="outlined-basic"
+                  label="OTP"
+                  variant="outlined"
+                  type="text"
+                  onChange={(i) => setOTP(i.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  onClick={handleVerifyOTP}
+                  disabled={loading}
+                >
+                  Verify OTP
+                </Button>
+              </>
+            )}
+            {!otpEmailSent && (
+              <>
+                <Button
+                  variant="contained"
+                  onClick={handleSendOTP}
+                  disabled={loading}
+                >
+                  Send OTP
+                </Button>
+              </>
+            )}
+          </SpacedGrid8px>
         </CardContent>
       </Card>
     </div>

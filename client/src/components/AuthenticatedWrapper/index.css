@@ -23,8 +23,10 @@
 
 #components-authenticatedwrapper .MuiList-root {
   padding-top: 0;
+  padding-left: 16px;
 }
 
 #components-authenticatedwrapper .MuiList-root li {
   border-radius: 8px;
+  margin-bottom: 8px;
 }

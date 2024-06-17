@@ -1,16 +1,16 @@
 import express from "express";
+import { getAllUserRequestWithRelations } from "~/constants";
 import {
+  authorizationMiddleware,
   makeGenericGetRequest,
   makeGenericUpdateRequest,
-} from "../../utils/router";
+} from "~/utils";
 
 const TABLE = "user_requests";
-const GET_QUERY =
-  "*, user:users(*), room_type:room_types(*), status_type:status_types(*), update_types(*)";
+const QUERY = getAllUserRequestWithRelations;
 
-const requestsRouter = express.Router();
+export const requestsRouter = express.Router();
+requestsRouter.use(authorizationMiddleware);
 
-requestsRouter.get("/get", makeGenericGetRequest(TABLE, GET_QUERY));
-requestsRouter.post("/update", makeGenericUpdateRequest(TABLE));
-
-export default requestsRouter;
+requestsRouter.get("/get", makeGenericGetRequest(TABLE, QUERY));
+requestsRouter.post("/update", makeGenericUpdateRequest(TABLE, QUERY));

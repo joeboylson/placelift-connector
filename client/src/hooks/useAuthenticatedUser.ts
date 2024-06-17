@@ -9,13 +9,18 @@ export function useAuthenticatedUser() {
 
   useEffect(() => {
     if (user) return;
+
+    const token = window.localStorage.getItem("token");
+    const tokenParams = { token: token ?? "" };
+    const params = new URLSearchParams(tokenParams).toString();
+
     axios
-      .get(`/api/is-authenticated`)
+      .get(`/api/auth/is-authenticated?${params}`)
       .then(function (response) {
         setUser(response.data.user);
       })
       .catch(function (error) {
-        console.log(`[ERROR: useAuthenticatedUser] "${error}" `);
+        console.error(`[ERROR: useAuthenticatedUser] "${error}" `);
         navigate("/login");
       });
   }, [navigate, user]);

@@ -5,14 +5,11 @@
   place-items: center;
 }
 
-#pages-login-wrapper .MuiPaper-root {
-  width: 100%;
-  max-width: 400px;
+#pages-login .MuiCardContent-root {
+  width: 400px;
 }
 
-#pages-login-wrapper .MuiCardContent-root {
-  
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+#pages-login .spaced-grid-8px .MuiButtonBase-root,
+#pages-login .spaced-grid-8px .MuiFormControl-root {
+  width: 100%;
 }

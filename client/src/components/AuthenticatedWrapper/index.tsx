@@ -1,10 +1,11 @@
 import "./index.css";
 import { WithChildren } from "../../types";
 import { createContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MenuItem, MenuList } from "@mui/material";
 import { useAuthenticatedUser } from "../../hooks/useAuthenticatedUser";
 import Header from "../Header";
+import { menuRoutes } from "../../enums/routes";
 
 interface UserContextType {
   user: any;
@@ -14,11 +15,8 @@ export const UserContext = createContext<UserContextType>({ user: null });
 
 export default function AuthenticatedWrapper({ children }: WithChildren) {
   const { user } = useAuthenticatedUser();
+  const location = useLocation();
   const navigate = useNavigate();
-
-  const goToUserRequests = () => navigate("/dashboard/user-requests");
-  const goToUsers = () => navigate("/dashboard/users");
-  const goToMessaging = () => navigate("/dashboard/messaging");
 
   return (
     <UserContext.Provider value={{ user }}>
@@ -28,9 +26,15 @@ export default function AuthenticatedWrapper({ children }: WithChildren) {
         </div>
 
         <MenuList dense>
-          <MenuItem onClick={goToUserRequests}>Requests</MenuItem>
-          <MenuItem onClick={goToUsers}>Users</MenuItem>
-          <MenuItem onClick={goToMessaging}>Messaging</MenuItem>
+          {menuRoutes.map((i) => {
+            const _onClick = () => navigate(i.route);
+            const _selected = location.pathname === i.route;
+            return (
+              <MenuItem onClick={_onClick} selected={_selected} key={i.route}>
+                {i.title}
+              </MenuItem>
+            );
+          })}
         </MenuList>
 
         <div id="components-authenticatedwrapper-page-wrapper">{children}</div>

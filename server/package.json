@@ -21,10 +21,15 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "~": "file:./src",
     "@hubspot/api-client": "^11.1.0",
+    "@onesignal/node-onesignal": "^1.0.0-beta7",
+    "@slack/web-api": "^7.0.4",
     "@supabase/supabase-js": "^2.43.1",
+    "@types/jsonwebtoken": "^9.0.6",
     "express": "^4.19.2",
     "firebase": "^10.11.1",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21"
   }
 }

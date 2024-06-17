@@ -15,9 +15,9 @@ import {
 } from "@mui/material";
 import BasicUserInfo from "../../components/BasicUserInfo";
 import BasicRequestInfo from "../../components/BasicRequestInfo";
-import RequestMediaModal from "../../components/RequestMediaModal";
-import CellSpacer from "../../components/CellSpacer";
+import RequestMediaModalWithButton from "../../components/RequestMediaModalWithButton";
 import { useRequestAPI } from "../../hooks/useRequestAPI";
+import SpacedGrid8px from "../../components/SpacedList8px";
 
 enum UserRequestsTableTabs {
   UNFILTERED_REQUESTS = "Unfiltered Requests",
@@ -81,26 +81,30 @@ export default function UserRequestsTable() {
                 >
                   {/* User Information */}
                   <TableCell component="th" scope="row">
-                    <BasicUserInfo user={row.user} />
-                    <CellSpacer />
-                    <ButtonGroup variant="contained" size="small">
-                      <Button onClick={markVerified} color="success">
-                        Verified
-                      </Button>
-                      <Button onClick={markSpam} variant="outlined">
-                        Spam
-                      </Button>
-                    </ButtonGroup>
+                    <SpacedGrid8px>
+                      <BasicUserInfo user={row.user} />
+                      <ButtonGroup variant="contained" size="small">
+                        <Button onClick={markVerified} color="success">
+                          Verified
+                        </Button>
+                        <Button onClick={markSpam} variant="outlined">
+                          Spam
+                        </Button>
+                      </ButtonGroup>
+                    </SpacedGrid8px>
                   </TableCell>
 
                   {/* Request Information */}
                   <TableCell>
-                    <BasicRequestInfo request={row} />
+                    <BasicRequestInfo
+                      request={row}
+                      updateRequest={updateRequest}
+                    />
                   </TableCell>
 
                   {/* Request Media */}
                   <TableCell>
-                    <RequestMediaModal request={row} />
+                    <RequestMediaModalWithButton request={row} />
                   </TableCell>
                 </TableRow>
               );

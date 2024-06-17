@@ -49,7 +49,7 @@ export default function UsersTable() {
               <UsersTableRow
                 user={user}
                 archiveUser={archiveUser}
-                key={`user-${index}`}
+                key={`user-${user.id}-${index}`}
               />
             ))}
           </TableBody>

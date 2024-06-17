@@ -1,7 +1,7 @@
 import { hubspotClient } from "../hubspot";
-import supabase from "../supabase";
-import { Tables } from "supabase";
+import { Tables } from "@shared/types";
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
+import { supabase } from "~/utils";
 import {
   FilterOperatorEnum,
   SimplePublicObjectInput,
@@ -40,22 +40,24 @@ export async function handleOnCreateOrUpdateSupabaseUser(
   return updateHubSpotUserFromSupabaseUser(newData);
 }
 
-supabase
-  .channel("room1")
-  .on<Tables<"users">>(
-    "postgres_changes",
-    { event: "*", schema: "public", table: "users" },
-    (payload) => {
-      // handle new users
-      if (payload.eventType === "INSERT")
-        return handleOnCreateOrUpdateSupabaseUser(payload);
+export async function subscribeToUsersTableChanges() {
+  supabase
+    .channel("room1")
+    .on<Tables<"users">>(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "users" },
+      (payload) => {
+        // handle new users
+        if (payload.eventType === "INSERT")
+          return handleOnCreateOrUpdateSupabaseUser(payload);
 
-      // handle new users
-      if (payload.eventType === "UPDATE")
-        return handleOnCreateOrUpdateSupabaseUser(payload);
-    }
-  )
-  .subscribe();
+        // handle new users
+        if (payload.eventType === "UPDATE")
+          return handleOnCreateOrUpdateSupabaseUser(payload);
+      }
+    )
+    .subscribe();
+}
 
 /**
  *
@@ -102,9 +104,6 @@ export async function createHubSpotUserFromSupabaseUser(
     placelift_id: supabaseUser.id.toString(),
   };
 
-  console.log(">>> CREATING NEW HUBSPOT USER");
-  console.log(properties);
-
   const newHubSpotContact: SimplePublicObjectInputForCreate = {
     properties,
     associations: [],
@@ -131,9 +130,6 @@ export async function updateHubSpotUserFromSupabaseUser(
     firstname: supabaseUser.name,
     phone: supabaseUser.phone_number,
   };
-
-  console.log(`>>> UPDATING HUBSPOT USER: [H-${hubSpotId}] [P-${placeLiftId}]`);
-  console.log(properties);
 
   const updatedHubSpotContact: SimplePublicObjectInput = { properties };
 
@@ -177,6 +173,5 @@ export async function syncUsersAndContacts() {
     await new Promise((r) => setTimeout(r, 500));
   }
 
-  console.log(">>> COMPLETED: syncUsersAndContacts()");
   //
 }

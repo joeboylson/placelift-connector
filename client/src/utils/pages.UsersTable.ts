@@ -1,5 +1,5 @@
 import { compact } from "lodash";
-import { AllUsers, UsersWithRelations } from "../types";
+import { AllUsers, UsersWithRelations } from "@shared/types";
 import { ChipOwnProps, TabOwnProps } from "@mui/material";
 import { UsersTableTabs, usersTableTabsValues } from "../enums/usersTable";
 import {

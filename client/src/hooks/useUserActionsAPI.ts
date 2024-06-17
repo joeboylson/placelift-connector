@@ -1,28 +1,58 @@
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Tables } from "../types/supabase";
-import { AllUserActions } from "../types";
 import { debounce } from "lodash";
+import { UserActionsFilter, AllUserActions, Tables } from "@shared/types";
 
-const API_URL_BASE = "/api/user-actions";
+const API_URL_BASE = "/api/user_actions";
 const API_GET_URL = `${API_URL_BASE}/get`;
+const API_GET_FILTERED_URL = `${API_URL_BASE}/filter`;
 const API_UPDATE_URL = `${API_URL_BASE}/update`;
 const API_BLANK_BOT_MESSAGE_URL = `${API_URL_BASE}/blank-bot-message`;
 
-export function useUserActionsApi() {
-  const [userActions, setUserActions] = useState<AllUserActions>([]);
+interface _options {
+  disableQueryAll?: boolean;
+}
+
+export function useUserActionsApi(userId?: number, options?: _options) {
+  const [userActions, setUserActions] = useState<AllUserActions>();
   const [userActionsApiFilter, setUserActionsApiFilter] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getAllUserActions = useCallback(async () => {
+    if (options?.disableQueryAll) return;
+    setLoading(true);
     try {
       const response = await axios.get(API_GET_URL);
       const data = response.data as AllUserActions;
       setUserActions(data);
     } catch (error) {
-      console.error(`>>>>>>>>>>>>> ${error}`);
+      console.error(error);
       return null;
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  }, [options]);
+
+  const getUserActionsByUserId = useCallback(async () => {
+    if (!userId) return;
+    setLoading(true);
+    try {
+      const filter: UserActionsFilter = {
+        key: "user_id",
+        value: userId.toString(),
+      };
+      const params = new URLSearchParams(filter).toString();
+      const url = `${API_GET_FILTERED_URL}?${params}`;
+      const response = await axios.get(url);
+      const data = response.data as AllUserActions;
+      setUserActions(data);
+    } catch (error) {
+      console.error(error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
 
   const updateUserActionsState = useCallback(
     (id: number, updatedUser: Partial<Tables<"users">>) => {
@@ -48,28 +78,36 @@ export function useUserActionsApi() {
         updateUserActionsState(id, data);
         return true;
       } catch (error) {
-        console.log(error);
+        console.error(error);
         return false;
       }
     },
     [updateUserActionsState]
   );
 
+  const refresh = useCallback(() => {
+    if (userActions === undefined) {
+      if (userId) getUserActionsByUserId();
+      else getAllUserActions();
+    }
+  }, [getAllUserActions, userActions, userId, getUserActionsByUserId]);
+
   const sendBlankBotMessage = useCallback(
     async (id: number) => {
       try {
         await axios.post(API_BLANK_BOT_MESSAGE_URL, { id });
-        getAllUserActions();
+        refresh();
         return true;
       } catch (error) {
-        console.log(error);
+        console.error(error);
         return false;
       }
     },
-    [getAllUserActions]
+    [refresh]
   );
 
   const filteredUsersActions = useMemo(() => {
+    if (userActions === undefined) return [];
     if (!userActionsApiFilter) return userActions;
     return userActions.filter((i) => {
       const userSearchValue = JSON.stringify([
@@ -89,16 +127,17 @@ export function useUserActionsApi() {
     });
   }, [userActions, userActionsApiFilter]);
 
-  useEffect(() => {
-    if (!userActions.length) getAllUserActions();
-  }, [getAllUserActions, userActions]);
+  useEffect(refresh, [refresh]);
+  useEffect(() => setUserActions(undefined), [userId]);
 
   return {
+    loading,
     userActions: filteredUsersActions,
     getAllUserActions,
     updateUserActionsState,
     updateUserAction,
     sendBlankBotMessage,
     setUsersApiFilter: debounce(setUserActionsApiFilter, 200),
+    getUserActionsByUserId,
   };
 }

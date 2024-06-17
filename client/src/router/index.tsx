@@ -8,22 +8,23 @@ import AuthenticatedWrapper from "../components/AuthenticatedWrapper";
 import UserRequestsTable from "../pages/UserRequestsTable";
 import UsersTable from "../pages/UsersTable";
 import Messaging from "../pages/Messaging";
+import { Routes } from "../enums/routes";
 
 const router = createBrowserRouter([
   {
-    path: "/login",
+    path: Routes.LOGIN,
     element: <Login />,
   },
   {
-    path: "/",
-    element: <Navigate to="/dashboard/user-requests" />,
+    path: Routes.ROOT,
+    element: <Navigate to="/dashboard/user_requests" />,
   },
   {
-    path: "/dashboard",
-    element: <Navigate to="/dashboard/user-requests" />,
+    path: Routes.DASHBOARD,
+    element: <Navigate to="/dashboard/user_requests" />,
   },
   {
-    path: "/dashboard/user-requests",
+    path: Routes.DASHBOARD_USER_REQUESTS,
     element: (
       <AuthenticatedWrapper>
         <UserRequestsTable />
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard/users",
+    path: Routes.DASHBOARD_USERS,
     element: (
       <AuthenticatedWrapper>
         <UsersTable />
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard/messaging",
+    path: Routes.DASHBOARD_MESSAGING,
     element: (
       <AuthenticatedWrapper>
         <Messaging />
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard/messaging/:userId",
+    path: Routes.DASHBOARD_MESSAGING_USERID,
     element: (
       <AuthenticatedWrapper>
         <Messaging />

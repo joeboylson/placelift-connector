@@ -7,15 +7,12 @@ export function useOTPLogin() {
     const url = " /api/auth/send-login-otp";
 
     try {
-      const response = await axios.get(`${url}?${params.toString()}`);
-      console.log(response);
+      await axios.get(`${url}?${params.toString()}`);
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
-
-    //
   }, []);
 
   const verifyOTP = useCallback(async (email: string, otp: string) => {
@@ -24,14 +21,14 @@ export function useOTPLogin() {
 
     try {
       const response = await axios.get(`${url}?${params.toString()}`);
-      console.log(response);
+      const token = response.data as string;
+      window.localStorage.setItem("token", token);
+
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     }
-
-    //
   }, []);
 
   return {

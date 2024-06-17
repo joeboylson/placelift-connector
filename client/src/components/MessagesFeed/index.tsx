@@ -1,103 +1,45 @@
 import "./index.css";
 import { useParams } from "react-router-dom";
 import { useUserActionsApi } from "../../hooks/useUserActionsAPI";
-import { useCallback, useMemo } from "react";
-import { Box, Button, Chip, Stack, Typography } from "@mui/material";
-import BasicUserInfo from "../BasicUserInfo";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CellSpacer from "../CellSpacer";
+import { useMemo } from "react";
+import { messagesNeedResponse } from "../../utils/component.MessagesFeed";
+import MessagesFeedUserInfo from "./MessagesFeedUserInfo";
+import MessagesFeedItem from "./MessagesFeedItem";
+import { CircularProgress } from "@mui/material";
 
-function MessagesFeed() {
+interface _props {
+  overrideUserId?: number;
+}
+
+export default function MessagesFeed({ overrideUserId }: _props) {
   // hooks
   const { userId } = useParams();
-  const { userActions: allUserActions, sendBlankBotMessage } =
-    useUserActionsApi();
+  const _id = overrideUserId ?? Number(userId);
+  const { userActions, loading } = useUserActionsApi(_id, {
+    disableQueryAll: true,
+  });
 
   // values
-  const userActions = useMemo(() => {
-    if (!userId) return [];
-    return allUserActions.filter((i) => i.user_id === Number(userId));
-  }, [allUserActions, userId]);
+  const userNeedsResponse = useMemo(
+    () => messagesNeedResponse(userActions, _id),
+    [userActions, _id]
+  );
 
-  const user = useMemo(() => {
-    if (!userId) return undefined;
-    return userActions[0]?.user;
-  }, [userActions]);
-
-  const userNeedsResponse = useMemo(() => {
-    if (!user) return false;
-
-    try {
-      return userActions[0]?.sender_id === user?.id;
-    } catch (e) {
-      return false;
-    }
-  }, [userActions, user]);
-
-  // functions
-  const handleSendBotMessage = useCallback(() => {
-    if (!user) return;
-    sendBlankBotMessage(user.id);
-  }, []);
-
-  if (!userId) return <span />;
+  if (!_id) return <span />;
 
   return (
     <div id="components-messagesfeed">
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        {user && <BasicUserInfo user={user} />}
-        <CellSpacer />
+      <MessagesFeedUserInfo userId={_id} />
 
-        <div>
-          {userNeedsResponse && (
-            <Button variant="contained" onClick={handleSendBotMessage}>
-              Ignore Needs Response
-            </Button>
-          )}
+      {loading && <CircularProgress />}
+
+      {!loading && (
+        <div id="components-messagesfeed-messageswrapper">
+          {userActions.map((userAction) => (
+            <MessagesFeedItem userAction={userAction} />
+          ))}
         </div>
-      </Box>
-
-      <div id="components-messagesfeed-messageswrapper">
-        {userActions.map((i) => {
-          if (!i.text && !i.image_path) return null;
-
-          const senderIsUser = i.user_id === i.sender_id;
-
-          return (
-            <div
-              className={`components-messagesfeed-message ${
-                senderIsUser && "sender-is-user"
-              }`}
-            >
-              <Typography variant="caption">By: {i.sender.name}</Typography>
-
-              <Stack direction="row" useFlexGap flexWrap="wrap" gap={"8px"}>
-                {i.is_unread && (
-                  <Chip
-                    label="Unread"
-                    variant="filled"
-                    color="primary"
-                    size="small"
-                  />
-                )}
-                <Chip
-                  size="small"
-                  label={`${new Date(i.created_at).toLocaleDateString()}`}
-                  icon={<AccessTimeIcon />}
-                  variant="filled"
-                  color="primary"
-                />
-              </Stack>
-              <CellSpacer />
-
-              <Typography variant="body1">{i.text}</Typography>
-              {i.image_path && <img src={i.image_path} alt="" />}
-            </div>
-          );
-        })}
-      </div>
+      )}
     </div>
   );
 }
-
-export default MessagesFeed;

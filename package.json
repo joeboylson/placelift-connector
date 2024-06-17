@@ -23,5 +23,8 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "env-cmd": "^10.1.0"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.17.5"
   }
 }

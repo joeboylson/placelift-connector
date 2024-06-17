@@ -1,0 +1,14 @@
+.components-messagesfeedmodal {
+  width: 100%;
+  max-width: 800px;
+}
+
+.components-messagesfeedmodal .MuiButtonBase-root {
+  width: 100%;
+}
+
+.components-messagesfeedmodal-messageswrapper {
+  padding-top: 8px;
+  background-color: #F5F5F5;
+  border-radius: 8px;
+}

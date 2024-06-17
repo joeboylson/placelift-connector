@@ -1,13 +1,17 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { Tables } from "../types/supabase";
-import { AllRequests } from "../types";
+import { Tables } from "@shared/types";
+import { AllRequests, UserRequestWithRelations } from "@shared/types";
 
-const API_URL_BASE = "/api/user-requests";
+const API_URL_BASE = "/api/user_requests";
 const API_GET_URL = `${API_URL_BASE}/get`;
 const API_UPDATE_URL = `${API_URL_BASE}/update`;
 
-export function useRequestAPI() {
+interface _hookOptions {
+  skipGetQueries: boolean;
+}
+
+export function useRequestAPI(options?: _hookOptions) {
   const [userRequests, setUserRequests] = useState<AllRequests>();
 
   const getAllRequests = useCallback(async () => {
@@ -22,10 +26,10 @@ export function useRequestAPI() {
   }, []);
 
   const updateRequestState = useCallback(
-    (id: number, updatedRequest: Partial<Tables<"user_requests">>) => {
+    (updatedRequest: UserRequestWithRelations) => {
       if (!userRequests) return;
       const _userRequests = userRequests.map((i) => {
-        if (i.id === id) return { ...i, ...updatedRequest };
+        if (i.id === updatedRequest.id) return updatedRequest;
         return i;
       });
       setUserRequests(_userRequests);
@@ -36,11 +40,12 @@ export function useRequestAPI() {
   const updateRequest = useCallback(
     async (id: number, data: Partial<Tables<"user_requests">>) => {
       try {
-        await axios.post(API_UPDATE_URL, { id, data });
-        updateRequestState(id, data);
+        const response = await axios.post(API_UPDATE_URL, { id, data });
+        const updatedData = response.data as UserRequestWithRelations;
+        updateRequestState(updatedData);
         return true;
       } catch (error) {
-        console.log(error);
+        console.error(error);
         return false;
       }
     },
@@ -48,8 +53,9 @@ export function useRequestAPI() {
   );
 
   useEffect(() => {
+    if (options?.skipGetQueries) return;
     if (!userRequests) getAllRequests();
-  }, [getAllRequests, userRequests]);
+  }, [options, getAllRequests, userRequests]);
 
   return {
     getAllRequests,

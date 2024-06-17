@@ -2,7 +2,7 @@ import "./index.css";
 import UsersList from "../../components/UsersList";
 import MessagesFeed from "../../components/MessagesFeed";
 
-function Messaging() {
+export default function Messaging() {
   return (
     <div id="pages-messaging">
       <UsersList />
@@ -10,5 +10,3 @@ function Messaging() {
     </div>
   );
 }
-
-export default Messaging;
