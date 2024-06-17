@@ -1,0 +1,6 @@
+.spaced-grid-8px {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    justify-items: baseline;
+}

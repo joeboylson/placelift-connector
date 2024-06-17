@@ -1,0 +1,47 @@
+#components-userstable {
+  height: calc(100vh - 64px - 16px - 16px - 16px);
+  overflow-y: scroll;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 48px 1fr;
+}
+
+#components-userstable .MuiTable-root {
+  height: calc(100vh - 64px - 16px - 16px - 16px - 48px);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 121px 1fr;
+}
+
+#components-userstable .MuiTableBody-root {
+  height: calc(100vh - 64px - 16px - 16px - 16px - 48px - 121px);
+  overflow-y: scroll;
+}
+
+#components-userstable .MuiTableCell-root {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  justify-items: baseline;
+}
+
+#components-userstable #table-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#components-userstable .MuiFormControl-root {
+  width: 100%;
+}
+
+#components-userstable tr {
+  display: block;
+  width: 100%;
+}
+
+#components-userstable .user-controls {
+  display: grid;
+  grid-template-columns: 150px 150px;
+  gap: 8px;
+}

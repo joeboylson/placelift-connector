@@ -1,0 +1,15 @@
+#pages-login {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+#pages-login .MuiCardContent-root {
+  width: 400px;
+}
+
+#pages-login .spaced-grid-8px .MuiButtonBase-root,
+#pages-login .spaced-grid-8px .MuiFormControl-root {
+  width: 100%;
+}
