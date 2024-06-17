@@ -5,7 +5,7 @@ const ONESIGNAL_REST_API_KEY = process.env.ONESIGNAL_REST_API_KEY;
 const ONESIGNAL_APP_ID = process.env.ONESIGNAL_APP_ID;
 
 import { Tables } from "@shared/types";
-import { supabase } from "~/utils";
+import { supabase } from "../../utils";
 import {
   RealtimePostgresChangesFilter,
   RealtimePostgresChangesPayload,

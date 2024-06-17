@@ -1,6 +1,6 @@
 import express from "express";
-import { makeGenericGetRequest, authorizationMiddleware } from "~/utils";
-import { TableName } from "~/types";
+import { makeGenericGetRequest, authorizationMiddleware } from "../../utils";
+import { TableName } from "../../types";
 
 const tables: TableName[] = [
   "action_types",

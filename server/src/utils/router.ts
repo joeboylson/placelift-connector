@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { TableName } from "queries";
-import { supabase } from "~/utils";
+import { supabase } from "../utils";
 
 export const makeGenericGetRequest = (table: TableName, query: string) => {
   return async function (_: Request, response: Response) {

@@ -1,10 +1,10 @@
 import express from "express";
-import { getAllUserRequestWithRelations } from "~/constants";
+import { getAllUserRequestWithRelations } from "../../constants";
 import {
   authorizationMiddleware,
   makeGenericGetRequest,
   makeGenericUpdateRequest,
-} from "~/utils";
+} from "../../utils";
 
 const TABLE = "user_requests";
 const QUERY = getAllUserRequestWithRelations;

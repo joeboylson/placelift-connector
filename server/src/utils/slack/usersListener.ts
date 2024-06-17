@@ -1,6 +1,11 @@
 import { Tables } from "@shared/types";
-import { getUserById } from "~/database";
-import { makeListSection, makeTextSection, slackBot, supabase } from "~/utils";
+import { getUserById } from "../../database";
+import {
+  makeListSection,
+  makeTextSection,
+  slackBot,
+  supabase,
+} from "../../utils";
 import {
   RealtimePostgresChangesFilter,
   RealtimePostgresInsertPayload,

@@ -6,7 +6,7 @@ import {
   decodeStringToTokenResult,
   encodeTokenResultToString,
   getIsAuthUserAProjectManager,
-} from "~/utils";
+} from "../../utils";
 
 export const authenticationRouter = express.Router();
 

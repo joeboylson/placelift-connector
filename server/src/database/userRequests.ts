@@ -1,5 +1,5 @@
-import { supabase } from "~/utils";
-import { getAllUserRequestWithRelations } from "~/constants";
+import { supabase } from "../utils";
+import { getAllUserRequestWithRelations } from "../constants";
 import { UserRequestWithRelations } from "@shared/types";
 
 export async function getUserRequestById(id: number) {

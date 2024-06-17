@@ -1,9 +1,9 @@
 import express from "express";
 import { Request, Response } from "express";
-import { TableName } from "~/types";
-import { getAllUsersWithRelations } from "~/constants";
-import { getUserById } from "~/database";
-import { makeGenericGetRequest, makeGenericUpdateRequest } from "~/utils";
+import { TableName } from "../../types";
+import { getAllUsersWithRelations } from "../../constants";
+import { getUserById } from "../../database";
+import { makeGenericGetRequest, makeGenericUpdateRequest } from "../../utils";
 
 const TABLE: TableName = "users";
 const GET_QUERY = getAllUsersWithRelations;

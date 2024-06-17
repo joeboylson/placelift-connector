@@ -1,5 +1,5 @@
-import { supabase } from "~/utils";
-import { getAllUserActionsWithRelations } from "~/constants";
+import { supabase } from "../utils";
+import { getAllUserActionsWithRelations } from "../constants";
 import { UserActionsWithRelations } from "@shared/types";
 
 export async function getUserActionById(id: number) {

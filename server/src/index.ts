@@ -7,7 +7,7 @@ import {
   userActionsRouter,
   typesRouter,
   setStaticFolder,
-} from "~/router";
+} from "./router";
 
 const app = express();
 const SERVER_PORT = process.env.SERVER_PORT;

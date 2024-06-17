@@ -1,5 +1,5 @@
-import { getAllUsersWithProjectManagerProfile } from "~/constants";
-import { supabase } from "~/utils";
+import { getAllUsersWithProjectManagerProfile } from "../constants";
+import { supabase } from "../utils";
 
 export async function getIsAuthUserAProjectManager() {
   const isProduction = process.env.MODE === "production";

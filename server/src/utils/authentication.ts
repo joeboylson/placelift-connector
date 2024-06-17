@@ -1,5 +1,5 @@
 import { TokenResult } from "@shared/types";
-import { getIsAuthUserAProjectManager, supabase } from "~/utils";
+import { getIsAuthUserAProjectManager, supabase } from "../utils";
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 

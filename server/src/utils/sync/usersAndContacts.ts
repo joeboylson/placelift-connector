@@ -1,7 +1,7 @@
 import { hubspotClient } from "../hubspot";
 import { Tables } from "@shared/types";
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
-import { supabase } from "~/utils";
+import { supabase } from "../../utils";
 import {
   FilterOperatorEnum,
   SimplePublicObjectInput,

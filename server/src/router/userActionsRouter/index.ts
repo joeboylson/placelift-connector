@@ -1,9 +1,9 @@
 import express from "express";
 import { Request, Response } from "express";
 import { TableName } from "queries";
-import { getFilteredUserActionsByKey } from "~/database";
-import { getAllUserActionsWithRelations } from "~/constants";
-import { makeGenericGetRequest, makeGenericUpdateRequest } from "~/utils";
+import { getFilteredUserActionsByKey } from "../../database";
+import { getAllUserActionsWithRelations } from "../../constants";
+import { makeGenericGetRequest, makeGenericUpdateRequest } from "../../utils";
 
 const TABLE: TableName = "user_actions";
 const GET_QUERY = getAllUserActionsWithRelations;

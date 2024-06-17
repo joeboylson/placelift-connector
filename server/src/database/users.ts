@@ -1,5 +1,5 @@
-import { supabase } from "~/utils";
-import { getAllUsersWithRelations } from "~/constants";
+import { supabase } from "../utils";
+import { getAllUsersWithRelations } from "../constants";
 import { UsersWithRelations } from "@shared/types";
 
 export async function getUserById(id: number) {
