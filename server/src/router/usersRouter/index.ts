@@ -3,12 +3,17 @@ import { Request, Response } from "express";
 import { TableName } from "../../types";
 import { getAllUsersWithRelations } from "../../constants";
 import { getUserById } from "../../database";
-import { makeGenericGetRequest, makeGenericUpdateRequest } from "../../utils";
+import {
+  authorizationMiddleware,
+  makeGenericGetRequest,
+  makeGenericUpdateRequest,
+} from "../../utils";
 
 const TABLE: TableName = "users";
 const GET_QUERY = getAllUsersWithRelations;
 
 export const usersRouter = express.Router();
+usersRouter.use(authorizationMiddleware);
 
 usersRouter.get("/get", makeGenericGetRequest(TABLE, GET_QUERY));
 usersRouter.post("/update", makeGenericUpdateRequest(TABLE, GET_QUERY));
