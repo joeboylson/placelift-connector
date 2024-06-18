@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup-server": "npm run --prefix server setup",
     "setup-client": "npm run --prefix client setup",
-    "setup": "npm run setup-server && npm run setup-client",
+    "setup": "npm install && npm run setup-server && npm run setup-client",
     "dev-server": "npm run --prefix server dev",
     "dev-client": "npm run --prefix client dev",
     "dev": "env-cmd concurrently 'npm run dev-server' 'npm run dev-client'",

@@ -12,14 +12,7 @@ import {
 } from "@mui/material";
 import { useCallback } from "react";
 import { useTypesAPI } from "../../hooks/useTypesAPI";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  p: 4,
-};
+import { modalStyle } from "../../constants/muiModal";
 
 interface _props {
   currentStatusId: number;
@@ -43,7 +36,7 @@ export default function SelectStatusModal({
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box sx={style}>
+      <Box sx={modalStyle}>
         <Card sx={{ minWidth: 500 }}>
           <CardContent>
             <Typography variant="h5" component="div">

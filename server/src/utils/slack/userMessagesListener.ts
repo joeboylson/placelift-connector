@@ -7,6 +7,7 @@ import {
   supabase,
 } from "../../utils";
 import {
+  RealtimeChannel,
   RealtimePostgresChangesFilter,
   RealtimePostgresChangesPayload,
 } from "@supabase/supabase-js";
@@ -50,6 +51,7 @@ async function _sendSlackNotification(id: number) {
  *
  * LISTENER
  */
+let subscription: RealtimeChannel;
 const _channel = "userMessagesListener";
 const _type = "postgres_changes";
 const _filter: RealtimePostgresChangesFilter<"INSERT"> = {
@@ -65,10 +67,14 @@ function _callback(payload: Payload) {
 function _onSubscribe(status: string, error: Error) {
   console.info(`${_channel}: ${status}`);
   if (error) console.error(error);
+  if (status !== "SUBSCRIBED") {
+    supabase.removeChannel(subscription);
+    _listen();
+  }
 }
 
 function _listen() {
-  supabase
+  subscription = supabase
     .channel(_channel)
     .on<Tables<"user_actions">>(_type, _filter, _callback)
     .subscribe(_onSubscribe);

@@ -3,7 +3,11 @@ import { Request, Response } from "express";
 import { TableName } from "queries";
 import { getFilteredUserActionsByKey } from "../../database";
 import { getAllUserActionsWithRelations } from "../../constants";
-import { makeGenericGetRequest, makeGenericUpdateRequest } from "../../utils";
+import {
+  makeGenericGetRequest,
+  makeGenericInsertRequest,
+  makeGenericUpdateRequest,
+} from "../../utils";
 
 const TABLE: TableName = "user_actions";
 const GET_QUERY = getAllUserActionsWithRelations;
@@ -11,6 +15,7 @@ export const userActionsRouter = express.Router();
 
 userActionsRouter.get("/get", makeGenericGetRequest(TABLE, GET_QUERY));
 userActionsRouter.post("/update", makeGenericUpdateRequest(TABLE, GET_QUERY));
+userActionsRouter.post("/insert", makeGenericInsertRequest(TABLE, GET_QUERY));
 
 userActionsRouter.get(
   "/filter",

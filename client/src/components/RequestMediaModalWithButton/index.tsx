@@ -1,7 +1,6 @@
 import "./index.css";
 import {
   Box,
-  Button,
   ImageList,
   ImageListItem,
   Modal,
@@ -11,14 +10,9 @@ import {
 import { useCallback, useMemo, useState } from "react";
 import { getIsMediaVideo } from "../../utils/media";
 import { UserRequestWithRelations } from "@shared/types";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  p: 4,
-};
+import MinimalButton from "../MinimalButton";
+import { Images } from "@phosphor-icons/react";
+import { modalStyle } from "../../constants/muiModal";
 
 interface _props {
   request: UserRequestWithRelations;
@@ -37,9 +31,12 @@ export default function RequestMediaModalWithButton({ request }: _props) {
 
   return (
     <div>
-      <Button onClick={handleOpen} variant="contained">
-        View {media.length} Images & Videos
-      </Button>
+      <MinimalButton onClick={handleOpen}>
+        <p>
+          {media.length}
+          <Images size={24} weight="duotone" />
+        </p>
+      </MinimalButton>
 
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -51,7 +48,7 @@ export default function RequestMediaModalWithButton({ request }: _props) {
 
       {open && (
         <Modal open={open && media.length > 0} onClose={handleClose}>
-          <Box sx={style}>
+          <Box sx={modalStyle}>
             <div className="components-requestmediamodal-mediawrapper">
               <Typography variant="h5">Request Media</Typography>
               <ImageList

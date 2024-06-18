@@ -17,3 +17,19 @@ export async function getUserById(id: number) {
     return null;
   }
 }
+
+export async function getUserByEmail(email: string) {
+  try {
+    const { data: _data, error } = await supabase
+      .from("users")
+      .select(getAllUsersWithRelations)
+      .match({ email })
+      .single();
+
+    if (error) throw error;
+    return _data as unknown as UsersWithRelations;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

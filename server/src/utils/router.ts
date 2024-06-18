@@ -39,3 +39,23 @@ export const makeGenericUpdateRequest = (table: TableName, query: string) => {
     }
   };
 };
+
+export const makeGenericInsertRequest = (table: TableName, query: string) => {
+  return async function (request: Request, response: Response) {
+    try {
+      const { data: insertData } = request.body;
+
+      const { data, error } = await supabase
+        .from(table)
+        .insert(insertData)
+        .select(query)
+        .single();
+
+      if (error) throw new Error(error.message);
+      response.status(200).send(data);
+    } catch (error) {
+      console.error(error);
+      response.status(500).send("error");
+    }
+  };
+};

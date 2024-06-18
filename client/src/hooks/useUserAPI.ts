@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Tables, AllUsers, UsersWithRelations } from "@shared/types";
+import { Tables, AllUsers } from "@shared/types";
 import { debounce } from "lodash";
 
 const API_URL_BASE = "/api/users";
@@ -8,12 +8,18 @@ const API_GET_URL = `${API_URL_BASE}/get`;
 const API_GET_BY_ID_URL = `${API_URL_BASE}/id`;
 const API_UPDATE_URL = `${API_URL_BASE}/update`;
 
-export function useUsersApi(userId?: number) {
+interface _options {
+  disableQueryAll?: boolean;
+  disableQueries?: boolean;
+}
+
+export function useUsersApi(userId?: number, options?: _options) {
   const [users, setUsers] = useState<AllUsers>();
   const [usersApiFilter, setUsersApiFilter] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const getAllUsers = useCallback(async () => {
+    if (options?.disableQueries) return;
     setLoading(true);
     try {
       const response = await axios.get(API_GET_URL);
@@ -28,7 +34,7 @@ export function useUsersApi(userId?: number) {
   }, []);
 
   const getUserById = useCallback(async () => {
-    console.log("GET USER BY ID");
+    if (options?.disableQueries) return;
     if (!userId) return;
     setLoading(true);
     try {
@@ -81,6 +87,7 @@ export function useUsersApi(userId?: number) {
   );
 
   const refresh = useCallback(() => {
+    if (options?.disableQueries) return;
     if (users === undefined) {
       if (userId) getUserById();
       else getAllUsers();

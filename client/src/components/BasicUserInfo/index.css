@@ -1,0 +1,15 @@
+.components-basicuserinfo-userheaderinfo {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.components-basicuserinfo-userheadericons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.components-basicuserinfo-userheaderinfo > .MuiTypography-root {
+  white-space: nowrap;
+}

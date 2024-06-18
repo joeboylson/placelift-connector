@@ -1,29 +1,62 @@
 import "./index.css";
 import { useParams } from "react-router-dom";
 import { useUserActionsApi } from "../../hooks/useUserActionsAPI";
-import { useMemo } from "react";
-import { messagesNeedResponse } from "../../utils/component.MessagesFeed";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import MessagesFeedUserInfo from "./MessagesFeedUserInfo";
 import MessagesFeedItem from "./MessagesFeedItem";
-import { CircularProgress } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
+import { debounce, isEmpty } from "lodash";
+import { useAuthenticatedUser } from "../../hooks/useAuthenticatedUser";
 
 interface _props {
   overrideUserId?: number;
 }
 
+const scrollContainerId = "components-messagesfeed-messageswrapper";
+const textFieldId = "components-messagesfeed-textfield";
+
 export default function MessagesFeed({ overrideUserId }: _props) {
   // hooks
   const { userId } = useParams();
+  const { user: projectManager } = useAuthenticatedUser();
+
   const _id = overrideUserId ?? Number(userId);
-  const { userActions, loading } = useUserActionsApi(_id, {
+  const { userActions, insertUserAction, loading } = useUserActionsApi(_id, {
     disableQueryAll: true,
   });
 
-  // values
-  const userNeedsResponse = useMemo(
-    () => messagesNeedResponse(userActions, _id),
-    [userActions, _id]
-  );
+  const [message, _setMessage] = useState<string>();
+  const setMessage = debounce(_setMessage, 200);
+
+  const scrollToBottom = useCallback(() => {
+    const element = document.querySelector(`#${scrollContainerId}`);
+    if (!element) return;
+    element.scrollTo(0, 0);
+  }, []);
+
+  const clearTextField = useCallback(() => {
+    const element = document.querySelector(
+      `#${textFieldId}`
+    ) as HTMLInputElement;
+    if (!element) return;
+    element.value = "";
+  }, []);
+
+  const handleSendMessage = useCallback(async () => {
+    if (isEmpty(message)) return;
+    const data = {
+      action_type_id: 1,
+      sender_id: projectManager.id,
+      user_id: _id,
+      text: message,
+    };
+
+    await insertUserAction(data);
+    clearTextField();
+    scrollToBottom();
+  }, [_id, insertUserAction, projectManager, message]);
+
+  useEffect(scrollToBottom, [scrollToBottom]);
 
   if (!_id) return <span />;
 
@@ -34,12 +67,24 @@ export default function MessagesFeed({ overrideUserId }: _props) {
       {loading && <CircularProgress />}
 
       {!loading && (
-        <div id="components-messagesfeed-messageswrapper">
+        <div id={scrollContainerId}>
           {userActions.map((userAction) => (
             <MessagesFeedItem userAction={userAction} />
           ))}
         </div>
       )}
+
+      <div id="components-messagesfeed-controlswrapper">
+        <TextField
+          id={textFieldId}
+          label="Send a message"
+          variant="standard"
+          onChange={(i) => setMessage(i.target.value)}
+        />
+        <Button onClick={handleSendMessage} variant="contained" size="small">
+          Send
+        </Button>
+      </div>
     </div>
   );
 }

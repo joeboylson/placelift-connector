@@ -18,7 +18,7 @@ import UsersTableHeader from "./UsersTableHeader";
 export default function UsersTable() {
   // hooks
   const [tab, setTab] = useState<UsersTableTabs>(usersTableTabsValues[0]);
-  const { users, archiveUser, setUsersApiFilter } = useUsersApi();
+  const { users, setUsersApiFilter } = useUsersApi();
 
   // values
   const rows = useMemo(() => getUsersForTab(tab, users), [users, tab]);
@@ -46,11 +46,7 @@ export default function UsersTable() {
           </TableHead>
           <TableBody>
             {rows.map((user, index) => (
-              <UsersTableRow
-                user={user}
-                archiveUser={archiveUser}
-                key={`user-${user.id}-${index}`}
-              />
+              <UsersTableRow user={user} key={`user-${user.id}-${index}`} />
             ))}
           </TableBody>
         </Table>

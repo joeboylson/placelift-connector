@@ -1,12 +1,19 @@
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
-import { UserActionsFilter, AllUserActions, Tables } from "@shared/types";
+import {
+  UserActionsFilter,
+  AllUserActions,
+  Tables,
+  UserActionsWithRelations,
+  InsertMessageData,
+} from "@shared/types";
 
 const API_URL_BASE = "/api/user_actions";
 const API_GET_URL = `${API_URL_BASE}/get`;
 const API_GET_FILTERED_URL = `${API_URL_BASE}/filter`;
 const API_UPDATE_URL = `${API_URL_BASE}/update`;
+const API_INSERT_URL = `${API_URL_BASE}/insert`;
 const API_BLANK_BOT_MESSAGE_URL = `${API_URL_BASE}/blank-bot-message`;
 
 interface _options {
@@ -72,7 +79,7 @@ export function useUserActionsApi(userId?: number, options?: _options) {
   );
 
   const updateUserAction = useCallback(
-    async (id: number, data: Partial<Tables<"users">>) => {
+    async (id: number, data: Partial<Tables<"user_actions">>) => {
       try {
         await axios.post(API_UPDATE_URL, { id, data });
         updateUserActionsState(id, data);
@@ -84,6 +91,18 @@ export function useUserActionsApi(userId?: number, options?: _options) {
     },
     [updateUserActionsState]
   );
+
+  const insertUserAction = useCallback(async (data: InsertMessageData) => {
+    try {
+      const response = await axios.post(API_INSERT_URL, { data });
+      const insertData = response.data as UserActionsWithRelations;
+      setUserActions((u) => [insertData, ...(u ?? [])]);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }, []);
 
   const refresh = useCallback(() => {
     if (userActions === undefined) {
@@ -136,6 +155,7 @@ export function useUserActionsApi(userId?: number, options?: _options) {
     getAllUserActions,
     updateUserActionsState,
     updateUserAction,
+    insertUserAction,
     sendBlankBotMessage,
     setUsersApiFilter: debounce(setUserActionsApiFilter, 200),
     getUserActionsByUserId,

@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { ChipOwnProps, Typography } from "@mui/material";
 import { UserActionsWithRelations } from "@shared/types";
 import { compact } from "lodash";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { Clock } from "@phosphor-icons/react";
 import ChipStack from "../ChipStack";
 
 interface _props {
@@ -37,7 +37,7 @@ export default function MessagesFeedItem({ userAction }: _props) {
       {
         size: "small",
         label: `${new Date(userAction.created_at).toLocaleDateString()}`,
-        icon: <AccessTimeIcon />,
+        icon: <Clock size={16} weight="duotone" />,
         variant: "filled",
         color: "primary",
       },

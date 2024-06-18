@@ -1,5 +1,5 @@
 import { compact } from "lodash";
-import { AllUsers, UsersWithRelations } from "@shared/types";
+import { AllUsers, Tables, UsersWithRelations } from "@shared/types";
 import { ChipOwnProps, TabOwnProps } from "@mui/material";
 import { UsersTableTabs, usersTableTabsValues } from "../enums/usersTable";
 import {
@@ -11,6 +11,23 @@ import {
   USERS_HAVE_PHONE_NUMBER,
 } from "../constants/users";
 
+export const getUserIsProspect = (
+  user: Tables<"users"> | UsersWithRelations
+) => {
+  if (!("user_homes" in user)) return;
+  if (!("user_requests" in user)) return;
+
+  const numberOfUserHomes = user.user_homes.length;
+  const numberOfUserRequests = user.user_requests.length;
+
+  return (
+    !user.is_archived &&
+    numberOfUserHomes > 0 &&
+    numberOfUserRequests === 0 &&
+    (!!user.email || !!user.phone_number)
+  );
+};
+
 export const getRowCalculations = (user: UsersWithRelations) => {
   const numberOfUserHomes = user.user_homes.length;
   const numberOfUserRequests = user.user_requests.length;
@@ -18,30 +35,18 @@ export const getRowCalculations = (user: UsersWithRelations) => {
     (i) => i.is_spam
   ).length;
 
-  const userIsProspect =
-    !user.is_archived &&
-    numberOfUserHomes > 0 &&
-    numberOfUserRequests === 0 &&
-    (!!user.email || !!user.phone_number);
-
   return {
     numUH: numberOfUserHomes,
     numUR: numberOfUserRequests,
     numSpUR: numberOfSpamUserRequests,
-    isPros: userIsProspect,
   };
 };
 
 export const getChipValues = (user: UsersWithRelations) => {
-  const { numUH, numUR, numSpUR, isPros } = getRowCalculations(user);
+  const { numUH, numUR, numSpUR } = getRowCalculations(user);
   const _sharedProps = { size: "small" };
 
-  const isProspectChip = isPros
-    ? { ..._sharedProps, label: `Prospect`, color: "success" }
-    : null;
-
   return compact([
-    isProspectChip,
     { ..._sharedProps, label: `# Homes: ${numUH}` },
     { ..._sharedProps, label: `# Requests: ${numUR}` },
     { ..._sharedProps, label: `# Spam Requests: ${numSpUR}` },

@@ -2,7 +2,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 114px 1fr;
+  grid-template-rows: 114px 1fr 114px;
   align-content: baseline;
   height: calc(100vh - 64px - 16px - 32px);
 }
@@ -18,10 +18,8 @@
 #components-messagesfeed-messageswrapper {
   overflow-y: scroll;
   padding: 32px 32px 160px 32px;
-
-  display: grid;
-  grid-template-columns: 1fr;
-  align-content: baseline;
+  display: flex;
+  flex-direction: column-reverse;
   gap: 32px;
   border-bottom: 1px solid transparent;
 }
@@ -38,4 +36,12 @@
   background-color: #29ABE2;
   border: 1px solid #29ABE2;
   color: white;
+}
+
+#components-messagesfeed-controlswrapper {
+  padding: 32px;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr 114px;
+  border-top: 1px solid #ddd;
 }

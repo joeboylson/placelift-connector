@@ -7,6 +7,7 @@ import {
   encodeTokenResultToString,
   getIsAuthUserAProjectManager,
 } from "../../utils";
+import { getUserByEmail } from "../../database";
 
 export const authenticationRouter = express.Router();
 
@@ -18,7 +19,12 @@ authenticationRouter.get(
       const token = request.query.token as string;
       const { accessToken, refreshToken } = decodeStringToTokenResult(token);
 
-      const user = await getAuthenticatedUser(accessToken, refreshToken);
+      const authUser = await getAuthenticatedUser(accessToken, refreshToken);
+      if (!authUser) throw new Error("Invalid user");
+
+      // get the user from the database
+      if (!authUser.email) throw new Error("Invalid user");
+      const user = await getUserByEmail(authUser.email);
       if (!user) throw new Error("Invalid user");
 
       // ensure user is project manager

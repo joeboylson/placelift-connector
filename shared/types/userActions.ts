@@ -14,3 +14,14 @@ export type UserActionsWithRelations = Tables<"user_actions"> & {
 };
 
 export type AllUserActions = UserActionsWithRelations[];
+
+export type InsertMessageData = Omit<
+  Tables<"user_actions">,
+  | "id"
+  | "created_at"
+  | "file_path"
+  | "image_path"
+  | "is_archived"
+  | "is_unread"
+  | "text"
+>;

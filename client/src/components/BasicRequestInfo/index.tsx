@@ -1,12 +1,11 @@
 import "./index.css";
 import { ChipOwnProps, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import NumbersIcon from "@mui/icons-material/Numbers";
 import ChipStack from "../ChipStack";
 import SpacedGrid8px from "../SpacedList8px";
 import SelectStatusModal from "../SelectStatusModal";
 import { Tables, UserRequestWithRelations } from "@shared/types";
+import { Clock, IdentificationCard } from "@phosphor-icons/react";
 
 interface _props {
   request: UserRequestWithRelations;
@@ -30,9 +29,17 @@ export default function BasicRequestInfo({ request, updateRequest }: _props) {
     const _createdDate = new Date(request.created_at).toLocaleDateString();
 
     return [
-      { ..._c, label: request.id, icon: <NumbersIcon /> },
+      {
+        ..._c,
+        label: request.id,
+        icon: <IdentificationCard size={16} weight="duotone" />,
+      },
       { ..._c, label: request.room_type.name },
-      { ..._c, label: _createdDate, icon: <AccessTimeIcon /> },
+      {
+        ..._c,
+        label: _createdDate,
+        icon: <Clock size={16} weight="duotone" />,
+      },
       {
         ..._c,
         label: request.status_type.name,

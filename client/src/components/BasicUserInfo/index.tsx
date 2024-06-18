@@ -1,39 +1,120 @@
 import "./index.css";
-import { ChipOwnProps, Typography } from "@mui/material";
-import { Tables } from "@shared/types";
-import NumbersIcon from "@mui/icons-material/Numbers";
-import PhoneIcon from "@mui/icons-material/Phone";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { Button, ChipOwnProps, Typography } from "@mui/material";
+import { Tables, UsersWithRelations } from "@shared/types";
 import { compact } from "lodash";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import ChipStack from "../ChipStack";
 import SpacedGrid8px from "../SpacedList8px";
+import MessagesFeedModalWithButton from "../MessagesFeedModalWithButton";
+import {
+  BookmarkSimple,
+  Clock,
+  DotsThreeCircleVertical,
+  Envelope,
+  IdentificationCard,
+  Phone,
+  Trash,
+} from "@phosphor-icons/react";
+import { getUserIsProspect } from "../../utils/pages.UsersTable";
+import { useToggle } from "../../hooks/useToggle";
+import MinimalButton from "../MinimalButton";
+import CardModal from "../CardModal";
+import { useConfirmationModal } from "../../hooks/useConfirmationModal";
+import { useUsersApi } from "../../hooks/useUserAPI";
 
 interface _props {
-  user: Tables<"users">;
+  user: Tables<"users"> | UsersWithRelations;
+  hideMessagesButton?: boolean;
+  handleAfterArchiveUser?: () => void;
 }
 
-export default function BasicUserInfo({ user }: _props) {
+const archiveUserConfirmationMessage = `
+  Are you sure you want to archive this user?
+`;
+
+export default function BasicUserInfo({
+  user,
+  hideMessagesButton,
+  handleAfterArchiveUser,
+}: _props) {
+  const { archiveUser } = useUsersApi(user.id, { disableQueries: true });
+
+  const handleConfirmArchiveUser = useCallback(() => {
+    archiveUser(user.id);
+    handleAfterArchiveUser && handleAfterArchiveUser();
+  }, [archiveUser]);
+
+  const { handleConfirm, ConfirmationModal } = useConfirmationModal(
+    handleConfirmArchiveUser,
+    archiveUserConfirmationMessage
+  );
+
+  const { value: open, toggle } = useToggle();
+
+  const userIsProspect = useMemo(() => getUserIsProspect(user), [user]);
+
   const chipProps = useMemo(() => {
     const { email, phone_number } = user;
     const _c = { size: "small" };
     const _createdDate = new Date(user.created_at).toLocaleDateString();
 
-    const emailChip = { ..._c, label: email };
-    const phoneNumberChip = { ..._c, label: phone_number, icon: <PhoneIcon /> };
+    const emailChip = {
+      ..._c,
+      label: email,
+      icon: <Envelope size={16} weight="duotone" />,
+    };
+    const phoneNumberChip = {
+      ..._c,
+      label: phone_number,
+      icon: <Phone size={16} weight="duotone" />,
+    };
 
     return compact([
-      { ..._c, label: user.id, icon: <NumbersIcon /> },
-      { ..._c, label: _createdDate, icon: <AccessTimeIcon /> },
+      {
+        ..._c,
+        label: user.id,
+        icon: <IdentificationCard size={16} weight="duotone" />,
+      },
+      {
+        ..._c,
+        label: _createdDate,
+        icon: <Clock size={16} weight="duotone" />,
+      },
       email && emailChip,
       phone_number && phoneNumberChip,
     ]) as ChipOwnProps[];
   }, [user]);
 
   return (
-    <SpacedGrid8px>
-      <Typography variant="body2">{user.name || "[guest]"}</Typography>
-      <ChipStack chipProps={chipProps} />
-    </SpacedGrid8px>
+    <>
+      <ConfirmationModal />
+      <CardModal open={open} handleClose={toggle}>
+        <Typography variant="h6">User Controls:</Typography>
+        {!user.is_archived && !!archiveUser && (
+          <Button onClick={handleConfirm} variant="outlined" color="error">
+            Archive User
+            <Trash size={16} weight="duotone" color="red" />
+          </Button>
+        )}
+      </CardModal>
+      <SpacedGrid8px>
+        <div className="components-basicuserinfo-userheaderinfo">
+          <div className="components-basicuserinfo-userheadericons">
+            <MinimalButton onClick={toggle}>
+              <DotsThreeCircleVertical size={24} weight="duotone" />
+            </MinimalButton>
+
+            {!hideMessagesButton && (
+              <MessagesFeedModalWithButton userId={user.id} />
+            )}
+            {userIsProspect && (
+              <BookmarkSimple size={24} weight="duotone" color="green" />
+            )}
+          </div>
+          <Typography variant="h6">{user.name || "[guest]"}</Typography>
+        </div>
+        <ChipStack chipProps={chipProps} />
+      </SpacedGrid8px>
+    </>
   );
 }
