@@ -13,3 +13,21 @@ export const getAvatarProps = (user: UsersWithRelations) => {
         }
   ) as AvatarOwnProps;
 };
+
+export const scrollListToSelectedItem = (element: HTMLDivElement) => {
+  // get list bounds
+  const elementBounds = element.getBoundingClientRect();
+
+  // get parent bounds
+  const parent = element.parentElement;
+  const parentBounds = parent?.getBoundingClientRect();
+
+  // UX/UI offset (this is an arbitrary value)
+  const offset = 144;
+
+  // calculate top
+  const top = elementBounds.y - (parentBounds?.y ?? 0) - offset;
+
+  // do scroll
+  element.parentElement?.scrollBy({ top, behavior: "smooth" });
+};

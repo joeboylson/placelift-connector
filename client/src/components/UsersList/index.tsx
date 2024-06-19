@@ -1,8 +1,8 @@
 import "./index.css";
 import { List, TextField } from "@mui/material";
 import { useUsersApi } from "../../hooks/useUserAPI";
-import UsersListItem from "./UserListItem";
 import { useMemo } from "react";
+import UsersListItem from "./UserListItem";
 
 export default function UsersList() {
   const { users, setUsersApiFilter } = useUsersApi();
@@ -19,6 +19,7 @@ export default function UsersList() {
         variant="filled"
         onChange={(i) => setUsersApiFilter(i.target.value)}
       />
+
       <List dense>
         {activeUsers.map((user) => (
           <UsersListItem user={user} />

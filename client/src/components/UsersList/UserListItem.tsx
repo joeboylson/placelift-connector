@@ -8,9 +8,12 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { messagesNeedResponse } from "../../utils/component.MessagesFeed";
-import { getAvatarProps } from "../../utils/components.UsersList";
+import {
+  getAvatarProps,
+  scrollListToSelectedItem,
+} from "../../utils/components.UsersList";
 import { UsersWithRelations } from "@shared/types";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useEffect, useRef } from "react";
 import { orderBy } from "lodash";
 
 interface _props {
@@ -20,6 +23,8 @@ interface _props {
 export default function UsersListItem({ user }: _props) {
   const { userId } = useParams();
   const navigate = useNavigate();
+
+  const listItemRef = useRef<HTMLDivElement>(null);
 
   /**
    * "user_actions" are not ordered by id-descending when joined from users
@@ -38,13 +43,24 @@ export default function UsersListItem({ user }: _props) {
 
   const isSelected = useMemo(() => Number(userId) === user.id, [user, userId]);
 
+  useEffect(() => {
+    if (listItemRef.current && isSelected) {
+      const element = listItemRef.current;
+      scrollListToSelectedItem(element);
+    }
+  }, [isSelected, listItemRef]);
+
   const handleOnClick = useCallback(
     () => navigate(`/dashboard/messaging/${user.id}`),
     [navigate, user]
   );
 
   return (
-    <ListItemButton onClick={handleOnClick} selected={isSelected}>
+    <ListItemButton
+      onClick={handleOnClick}
+      selected={isSelected}
+      ref={listItemRef}
+    >
       <ListItemAvatar>
         <Avatar {...getAvatarProps(user)} />
       </ListItemAvatar>
