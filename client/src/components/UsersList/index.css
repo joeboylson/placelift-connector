@@ -13,12 +13,24 @@
   border-bottom: 0;
 }
 
+#components-userslist-controlwrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 8px;
+}
+
+#components-userslist-controls {
+  padding: 8px;
+}
+
 #components-userslist .MuiList-root,
 #components-userslist .MuiButtonBase-root {
   width: 100%;
 }
 
 #components-userslist .MuiList-root {
+  padding: 0;
   height: calc(100vh - 64px - 16px - 32px - 56px);
   overflow-y: scroll;
 }

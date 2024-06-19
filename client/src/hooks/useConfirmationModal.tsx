@@ -1,15 +1,15 @@
+import ConfirmationCard from "../components/ConfirmationCard";
 import { Box, Modal } from "@mui/material";
 import { useToggle } from "./useToggle";
 import { modalStyle } from "../constants/muiModal";
 import { useCallback } from "react";
-import ConfirmationCard from "../components/ConfirmationCard";
 
 export function useConfirmationModal(onConfirm: () => void, title: string) {
-  const { value: open, toggle } = useToggle();
+  const { value: open, toggle, disable: closeModal } = useToggle();
 
   const handleConfirm = useCallback(() => {
     onConfirm();
-    toggle();
+    closeModal();
   }, [onConfirm]);
 
   function ConfirmationModal() {

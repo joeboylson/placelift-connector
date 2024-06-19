@@ -1,11 +1,18 @@
 import "./index.css";
+import ChipStack from "../ChipStack";
+import SpacedGrid8px from "../SpacedList8px";
+import MessagesFeedModalWithButton from "../MessagesFeedModalWithButton";
+import MinimalButton from "../MinimalButton";
+import CardModal from "../CardModal";
 import { Button, ChipOwnProps, Typography } from "@mui/material";
 import { Tables, UsersWithRelations } from "@shared/types";
 import { compact } from "lodash";
 import { useCallback, useMemo } from "react";
-import ChipStack from "../ChipStack";
-import SpacedGrid8px from "../SpacedList8px";
-import MessagesFeedModalWithButton from "../MessagesFeedModalWithButton";
+import { getUserIsProspect } from "../../utils/pages.UsersTable";
+import { useToggle } from "../../hooks/useToggle";
+import { useConfirmationModal } from "../../hooks/useConfirmationModal";
+import { useUsersApi } from "../../hooks/useUserAPI";
+
 import {
   BookmarkSimple,
   Clock,
@@ -15,12 +22,6 @@ import {
   Phone,
   Trash,
 } from "@phosphor-icons/react";
-import { getUserIsProspect } from "../../utils/pages.UsersTable";
-import { useToggle } from "../../hooks/useToggle";
-import MinimalButton from "../MinimalButton";
-import CardModal from "../CardModal";
-import { useConfirmationModal } from "../../hooks/useConfirmationModal";
-import { useUsersApi } from "../../hooks/useUserAPI";
 
 interface _props {
   user: Tables<"users"> | UsersWithRelations;
@@ -39,7 +40,10 @@ export default function BasicUserInfo({
 }: _props) {
   const { archiveUser } = useUsersApi(user.id, { disableQueries: true });
 
+  const { value: open, toggle, disable: closeModal } = useToggle();
+
   const handleConfirmArchiveUser = useCallback(() => {
+    closeModal();
     archiveUser(user.id);
     handleAfterArchiveUser && handleAfterArchiveUser();
   }, [archiveUser]);
@@ -48,8 +52,6 @@ export default function BasicUserInfo({
     handleConfirmArchiveUser,
     archiveUserConfirmationMessage
   );
-
-  const { value: open, toggle } = useToggle();
 
   const userIsProspect = useMemo(() => getUserIsProspect(user), [user]);
 
