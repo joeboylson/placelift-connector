@@ -2,14 +2,17 @@ import "./index.css";
 import UsersListItem from "./UserListItem";
 import MinimalButton from "../MinimalButton";
 import { List, TextField } from "@mui/material";
-import { useUsersApi } from "../../hooks/useUserAPI";
 import { useCallback, useMemo, useRef } from "react";
 import { Crosshair } from "@phosphor-icons/react";
 import { scrollListToSelectedItem } from "../../utils/components.UsersList";
+import { AllUsers } from "@shared/types";
 
-export default function UsersList() {
-  const { users, setUsersApiFilter } = useUsersApi();
+interface _props {
+  users: AllUsers;
+  setUsersApiFilter: (filter: string) => void;
+}
 
+export default function UsersList({ users, setUsersApiFilter }: _props) {
   const listRef = useRef<HTMLUListElement>(null);
 
   const activeUsers = useMemo(

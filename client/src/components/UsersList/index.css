@@ -34,3 +34,14 @@
   height: calc(100vh - 64px - 16px - 32px - 56px);
   overflow-y: scroll;
 }
+
+#components-userslist .MuiButtonBase-root.needs-response {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+#components-userslist .MuiButtonBase-root {
+  display: grid;
+  grid-template-columns: 40px 2fr 32px 32px;
+  gap: 8px;
+  align-items: center;
+}

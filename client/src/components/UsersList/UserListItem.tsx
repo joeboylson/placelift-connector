@@ -15,6 +15,7 @@ import {
 import { UsersWithRelations } from "@shared/types";
 import { useCallback, useMemo, useEffect, useRef } from "react";
 import { orderBy } from "lodash";
+import { Envelope, Phone, WarningDiamond } from "@phosphor-icons/react";
 
 interface _props {
   user: UsersWithRelations;
@@ -60,15 +61,23 @@ export default function UsersListItem({ user }: _props) {
       onClick={handleOnClick}
       selected={isSelected}
       ref={listItemRef}
+      className={needsResponse ? "needs-response" : ""}
     >
       <ListItemAvatar>
         <Avatar {...getAvatarProps(user)} />
       </ListItemAvatar>
-
       <Typography variant="body1">{user.name ?? "[guest]"}</Typography>
-      {needsResponse && (
-        <Chip size="small" label={"Needs Response"} color="primary" />
+
+      {needsResponse ? (
+        <WarningDiamond size={32} weight="duotone" color="red" />
+      ) : (
+        <span />
       )}
+
+      <div>
+        {user.email && <Envelope size={16} weight="duotone" />}
+        {user.phone_number && <Phone size={16} weight="duotone" />}
+      </div>
     </ListItemButton>
   );
 }

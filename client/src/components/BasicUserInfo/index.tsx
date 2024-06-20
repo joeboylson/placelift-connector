@@ -27,6 +27,7 @@ interface _props {
   user: Tables<"users"> | UsersWithRelations;
   hideMessagesButton?: boolean;
   handleAfterArchiveUser?: () => void;
+  overrideArchiveUser?: (userId: number) => void;
 }
 
 const archiveUserConfirmationMessage = `
@@ -37,8 +38,14 @@ export default function BasicUserInfo({
   user,
   hideMessagesButton,
   handleAfterArchiveUser,
+  overrideArchiveUser,
 }: _props) {
-  const { archiveUser } = useUsersApi(user.id, { disableQueries: true });
+  const { users, archiveUser: defaultArchiveUser } = useUsersApi(user.id, {
+    disableQueries: true,
+  });
+  console.log({ users });
+
+  const archiveUser = overrideArchiveUser ?? defaultArchiveUser;
 
   const { value: open, toggle, disable: closeModal } = useToggle();
 

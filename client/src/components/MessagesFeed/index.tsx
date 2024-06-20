@@ -10,12 +10,16 @@ import { useAuthenticatedUser } from "../../hooks/useAuthenticatedUser";
 
 interface _props {
   overrideUserId?: number;
+  overrideArchiveUser?: (userId: number) => void;
 }
 
 const scrollContainerId = "components-messagesfeed-messageswrapper";
 const textFieldId = "components-messagesfeed-textfield";
 
-export default function MessagesFeed({ overrideUserId }: _props) {
+export default function MessagesFeed({
+  overrideUserId,
+  overrideArchiveUser,
+}: _props) {
   // hooks
   const { userId } = useParams();
   const { user: projectManager } = useAuthenticatedUser();
@@ -62,7 +66,10 @@ export default function MessagesFeed({ overrideUserId }: _props) {
 
   return (
     <div id="components-messagesfeed">
-      <MessagesFeedUserInfo userId={_id} />
+      <MessagesFeedUserInfo
+        userId={_id}
+        overrideArchiveUser={overrideArchiveUser}
+      />
 
       {loading && <CircularProgress />}
 

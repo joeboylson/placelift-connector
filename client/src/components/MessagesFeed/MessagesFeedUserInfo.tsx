@@ -7,9 +7,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 interface _props {
   userId: number;
+  overrideArchiveUser?: (userId: number) => void;
 }
 
-export default function MessagesFeedUserInfo({ userId }: _props) {
+export default function MessagesFeedUserInfo({
+  userId,
+  overrideArchiveUser,
+}: _props) {
   // hooks
   const { users, loading } = useUsersApi(userId);
 
@@ -36,6 +40,7 @@ export default function MessagesFeedUserInfo({ userId }: _props) {
             <BasicUserInfo
               user={user}
               hideMessagesButton
+              overrideArchiveUser={overrideArchiveUser}
               handleAfterArchiveUser={handleAfterArchiveUser}
             />
           )}
