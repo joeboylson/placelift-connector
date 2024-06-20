@@ -70,7 +70,8 @@ function _onSubscribe(status: string, error: Error) {
   if (error) console.error(error);
   if (status !== "SUBSCRIBED") {
     supabase.removeChannel(subscription);
-    _listen();
+    subscription = null;
+    _setUpListener();
   }
 }
 
@@ -81,4 +82,8 @@ function _listen() {
     .subscribe(_onSubscribe);
 }
 
-setTimeout(_listen, 1000);
+function _setUpListener() {
+  setTimeout(_listen, 5000);
+}
+
+_setUpListener();
