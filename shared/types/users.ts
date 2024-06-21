@@ -7,3 +7,8 @@ export type UsersWithRelations = Tables<"users"> & {
 };
 
 export type AllUsers = UsersWithRelations[];
+
+export type IsAuthenticated = {
+  authenticated: boolean;
+  user?: UsersWithRelations;
+};

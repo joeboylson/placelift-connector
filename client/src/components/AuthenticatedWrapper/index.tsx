@@ -6,20 +6,23 @@ import { MenuItem, MenuList } from "@mui/material";
 import { useAuthenticatedUser } from "../../hooks/useAuthenticatedUser";
 import Header from "../Header";
 import { menuRoutes } from "../../enums/routes";
+import { IsAuthenticated } from "@shared/types";
 
 interface UserContextType {
-  user: any;
+  authenticatedUser?: IsAuthenticated;
 }
 
-export const UserContext = createContext<UserContextType>({ user: null });
+export const UserContext = createContext<UserContextType>({
+  authenticatedUser: undefined,
+});
 
 export default function AuthenticatedWrapper({ children }: WithChildren) {
-  const { user } = useAuthenticatedUser();
+  const { authenticatedUser } = useAuthenticatedUser();
   const location = useLocation();
   const navigate = useNavigate();
 
   return (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ authenticatedUser }}>
       <div id="components-authenticatedwrapper">
         <div id="components-authenticatedwrapper-header">
           <Header />

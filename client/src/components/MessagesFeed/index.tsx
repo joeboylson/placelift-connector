@@ -2,11 +2,11 @@ import "./index.css";
 import { useParams } from "react-router-dom";
 import { useUserActionsApi } from "../../hooks/useUserActionsAPI";
 import { Button, CircularProgress, TextField } from "@mui/material";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { debounce, isEmpty } from "lodash";
+import { UserContext } from "../AuthenticatedWrapper";
 import MessagesFeedUserInfo from "./MessagesFeedUserInfo";
 import MessagesFeedItem from "./MessagesFeedItem";
-import { useCallback, useEffect, useState } from "react";
-import { debounce, isEmpty } from "lodash";
-import { useAuthenticatedUser } from "../../hooks/useAuthenticatedUser";
 
 interface _props {
   overrideUserId?: number;
@@ -22,7 +22,7 @@ export default function MessagesFeed({
 }: _props) {
   // hooks
   const { userId } = useParams();
-  const { user: projectManager } = useAuthenticatedUser();
+  const { authenticatedUser } = useContext(UserContext);
 
   const _id = overrideUserId ?? Number(userId);
   const { userActions, insertUserAction, loading } = useUserActionsApi(_id, {
@@ -48,9 +48,11 @@ export default function MessagesFeed({
 
   const handleSendMessage = useCallback(async () => {
     if (isEmpty(message)) return;
+    if (!authenticatedUser?.user) return;
+
     const data = {
       action_type_id: 1,
-      sender_id: projectManager.id,
+      sender_id: authenticatedUser.user.id,
       user_id: _id,
       text: message,
     };
@@ -58,7 +60,7 @@ export default function MessagesFeed({
     await insertUserAction(data);
     clearTextField();
     scrollToBottom();
-  }, [_id, insertUserAction, projectManager, message]);
+  }, [_id, insertUserAction, authenticatedUser, message]);
 
   useEffect(scrollToBottom, [scrollToBottom]);
 

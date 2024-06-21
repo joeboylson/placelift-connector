@@ -1,29 +1,33 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { IsAuthenticated } from "@shared/types";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function useAuthenticatedUser() {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<any>();
+  const [authenticatedUser, setAuthenticatedUser] = useState<IsAuthenticated>();
+
+  const getIsAuthenticated = useCallback(async () => {
+    if (authenticatedUser) return;
+
+    try {
+      const token = window.localStorage.getItem("token");
+      const tokenParams = { token: token ?? "" };
+      const params = new URLSearchParams(tokenParams).toString();
+
+      const response = await axios.get(`/api/auth/is-authenticated?${params}`);
+      const data = response.data as IsAuthenticated;
+      setAuthenticatedUser(data);
+    } catch (error) {
+      console.error(error);
+      navigate("/login");
+    }
+  }, [navigate, authenticatedUser]);
 
   useEffect(() => {
-    if (user) return;
+    getIsAuthenticated();
+  }, [getIsAuthenticated]);
 
-    const token = window.localStorage.getItem("token");
-    const tokenParams = { token: token ?? "" };
-    const params = new URLSearchParams(tokenParams).toString();
-
-    axios
-      .get(`/api/auth/is-authenticated?${params}`)
-      .then(function (response) {
-        setUser(response.data.user);
-      })
-      .catch(function (error) {
-        console.error(`[ERROR: useAuthenticatedUser] "${error}" `);
-        navigate("/login");
-      });
-  }, [navigate, user]);
-
-  return { user };
+  return { authenticatedUser };
 }

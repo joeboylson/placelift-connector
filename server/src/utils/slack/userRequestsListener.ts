@@ -105,10 +105,10 @@ function _onSubscribe(status: string, error: Error) {
 }
 
 function _listen() {
-  subscription = supabase
-    .channel(_channel)
-    .on<Tables<"user_requests">>(_type, _filter, _callback)
-    .subscribe(_onSubscribe);
+  // subscription = supabase
+  //   .channel(_channel)
+  //   .on<Tables<"user_requests">>(_type, _filter, _callback)
+  //   .subscribe(_onSubscribe);
 }
 
 function _setUpListener() {

@@ -8,6 +8,7 @@ import {
   getIsAuthUserAProjectManager,
 } from "../../utils";
 import { getUserByEmail } from "../../database";
+import { IsAuthenticated } from "@shared/types";
 
 export const authenticationRouter = express.Router();
 
@@ -31,10 +32,12 @@ authenticationRouter.get(
       const userIsProjectManager = await getIsAuthUserAProjectManager();
       if (!userIsProjectManager) throw new Error("Invalid user");
 
-      return response.status(200).send({ authenticated: true, user });
+      const _response: IsAuthenticated = { authenticated: true, user };
+      return response.status(200).send(_response);
     } catch (error) {
       await supabase.auth.signOut();
-      response.status(403).send({ authenticated: false, user: null });
+      const _response: IsAuthenticated = { authenticated: false, user: null };
+      return response.status(200).send(_response);
     }
   }
 );
