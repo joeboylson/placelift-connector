@@ -17,8 +17,9 @@ export function useAuthenticatedUser() {
       const params = new URLSearchParams(tokenParams).toString();
 
       const response = await axios.get(`/api/auth/is-authenticated?${params}`);
-      const data = response.data as IsAuthenticated;
-      setAuthenticatedUser(data);
+      const _authenticatedUser = response.data as unknown as IsAuthenticated;
+      if (!_authenticatedUser?.authenticated) throw new Error("Invalid user");
+      setAuthenticatedUser(_authenticatedUser);
     } catch (error) {
       console.error(error);
       navigate("/login");
